@@ -1,57 +1,37 @@
-import axios from 'axios';
-import {CREATE_TRANSACTION, ESTIMATE, FIND_ROUTE, SEARCH_TRANSACTION} from "./endpoints";
 import {
-    CreateTransactionResponse,
-    QuerySwapParams,
-    RouteEstimateResponse,
-    RouteParams,
-    SwapResponse,
-    TransactionParams,
-    TransactionStatusParams,
-    TransactionStatusResponse
+    CreateTransactionRequestBody, CreateTransactionResponse,
+    EstimateRequestBody,
+    EstimateResponse,
+    RouteOption,
+    ScanRequestBody
 } from "../types";
-import {logger} from "../logger";
+import {ClientConfig} from "./config/clientConfig";
+import {CREATE_TRANSACTION, ESTIMATE, FIND_ROUTE} from "./endpoints";
+import {post} from "./utils/fetch";
 
-export const REST_ADDRESS = "pusher.eywa.fi"
-const endpoint = '/users/me';
 
+class PusherClient {
+    private config: ClientConfig;
 
-export const getRoute = async (params: QuerySwapParams): Promise<SwapResponse | undefined> => {
-    try {
-        const response = await axios.post<SwapResponse>(REST_ADDRESS + FIND_ROUTE);
-        return response.data;
-    } catch (error) {
-        logger.error(`Can't get route for parameters: ${params} because of: ${error}`)
-        return undefined;
+    constructor(config: ClientConfig) {
+        this.config = config
+    }
+
+    async scanForRoutes(requestBody: ScanRequestBody): Promise<RouteOption[]> {
+        const result = await post(`${this.config.baseUrl}${FIND_ROUTE}`, requestBody)
+        return result as RouteOption[];
+    }
+
+    async fetchTransactionEstimate(requestBody: EstimateRequestBody): Promise<EstimateResponse> {
+        const result = await post(`${this.config.baseUrl}${ESTIMATE}`, requestBody)
+        return result as EstimateResponse;
+    }
+
+    async createTransaction(requestBody: CreateTransactionRequestBody): Promise<CreateTransactionResponse> {
+        const result = await post(`${this.config.baseUrl}${CREATE_TRANSACTION}`, requestBody)
+        return result as CreateTransactionResponse;
     }
 }
 
-export const getEstimates = async (params: RouteParams): Promise<RouteEstimateResponse | undefined> => {
-    try {
-        const response = await axios.post<RouteEstimateResponse>(REST_ADDRESS + ESTIMATE, params);
-        return response.data;
-    } catch (error) {
-        logger.error(`Can't get route for parameters: ${params} because of: ${error}`)
-        return undefined;
-    }
-}
+export {PusherClient};
 
-export const createTransaction = async (params: TransactionParams): Promise<CreateTransactionResponse | undefined> => {
-    try {
-        const response = await axios.post<CreateTransactionResponse>(REST_ADDRESS + CREATE_TRANSACTION, params);
-        return response.data;
-    } catch (error) {
-        logger.error(`Can't get route for parameters: ${params} because of: ${error}`)
-        return undefined;
-    }
-}
-
-export const getTransactionStatus = async (params: TransactionStatusParams): Promise<TransactionStatusResponse | undefined> => {
-    try {
-        const response = await axios.get<TransactionStatusResponse>(REST_ADDRESS + SEARCH_TRANSACTION(params.transaction_hash));
-        return response.data;
-    } catch (error) {
-        logger.error(`Can't get route for parameters: ${params} because of: ${error}`)
-        return undefined;
-    }
-}
