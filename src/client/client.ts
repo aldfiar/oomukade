@@ -1,23 +1,18 @@
-import {
-    CreateTransactionRequestBody, CreateTransactionResponse,
-    EstimateRequestBody,
-    EstimateResponse,
-    RouteOption,
-    ScanRequestBody
-} from "../types";
-import {ClientConfig} from "./config/clientConfig";
+import {Query, RouteOption,} from "../types";
+import config, {ClientConfig} from "./config/clientConfig";
 import {CREATE_TRANSACTION, ESTIMATE, FIND_ROUTE} from "./endpoints";
 import {post} from "./utils/fetch";
+import {CreateTransactionRequestBody, CreateTransactionResponse, EstimateRequestBody, EstimateResponse} from "./types";
 
 
-class PusherClient {
+export class PusherClient {
     private config: ClientConfig;
 
     constructor(config: ClientConfig) {
         this.config = config
     }
 
-    async scanForRoutes(requestBody: ScanRequestBody): Promise<RouteOption[]> {
+    async scanForRoutes(requestBody: Query): Promise<RouteOption[]> {
         const result = await post(`${this.config.baseUrl}${FIND_ROUTE}`, requestBody)
         return result as RouteOption[];
     }
@@ -33,5 +28,5 @@ class PusherClient {
     }
 }
 
-export {PusherClient};
+export const pusher = new PusherClient(config);
 

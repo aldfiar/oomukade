@@ -1,36 +1,36 @@
-// Located in types.ts
+export interface Params {
+    tokenIn: string;
+    chainIdIn: number;
+    tokenOut: string;
+    chainIdOut: number;
+    amountIn: string;
+}
 
-// Interface for the body of a request to scan for cross-chain routes
-export interface ScanRequestBody {
-    params: {
-        tokenIn: string;
-        tokenOut: string;
-        amountIn: string;
-        chainIdIn: number;
-        chainIdOut: number;
-    };
+export interface Query {
+    params: Params;
     slippage: number;
 }
 
-// Redefined RouteOption based on provided JSON structure
-export interface RouteOption {
-    query: {
-        params: {
-            tokenIn: string;
-            chainIdIn: number;
-            tokenOut: string;
-            chainIdOut: number;
-            amountIn: string;
-        };
-        slippage: number;
-    };
-    route: RouteStep[];
+export interface Amounts {
     amountIn: string;
-    amountInUsd: number;
+    amountInWithoutSlippage?: string;
     amountOut: string;
     amountOutWithoutSlippage: string;
+    slippage: number;
+}
+
+export interface RouteParams extends Amounts {
+    tokenIn: Token;
+    chainIdIn: number;
+    tokenOut: Token;
+    chainIdOut: number;
+}
+
+export interface RouteOption extends Amounts {
+    query: Query;
+    route: RouteStep[];
+    amountInUsd: number;
     amountOutUsd: number;
-    amountOutWithoutSlippageUsd: number;
     priceImpact: number;
     totalFee: Fee;
 }
@@ -41,18 +41,6 @@ export interface RouteStep {
     params: RouteParams;
     pool?: Pool;
     fees: Fee[];
-}
-
-export interface RouteParams {
-    tokenIn: Token;
-    chainIdIn: number;
-    tokenOut: Token;
-    chainIdOut: number;
-    amountIn: string;
-    amountInWithoutSlippage: string;
-    amountOut: string;
-    amountOutWithoutSlippage: string;
-    slippage: number;
 }
 
 export interface Token {
@@ -70,10 +58,6 @@ export interface Token {
     coins?: string[];
 }
 
-export interface Logos {
-    [size: string]: string; // Example: "16": "https://..."
-}
-
 export interface Pool {
     address: string;
     coins: string[];
@@ -89,63 +73,6 @@ export interface Fee {
     amount: string;
 }
 
-// Interface for the body of a request to fetch a transaction estimate
-// Note: Adjust as necessary if different from RouteOption
-export interface EstimateRequestBody {
-    query: {
-        params: {
-            tokenIn: string;
-            chainIdIn: number;
-            tokenOut: string;
-            chainIdOut: number;
-            amountIn: string;
-        };
-        slippage: number;
-    };
-    route: RouteStep[]; // Assuming the full route information is needed for an estimate
-}
-
-// Updated EstimateResponse to reflect the structure of the provided JSON response
-export interface EstimateResponse {
-    priceInDollars: string;
-    executionPrice: string;
-    stablePrice: string;
-    workerFee: string;
-    deadline: string;
-    signature: string;
-}
-
-
-// Interface for the body of a request to create a transaction
-export interface CreateTransactionRequestBody {
-    from: string;
-    recipient: string;
-    permit?: {
-        v: number;
-        r: string;
-        s: string;
-    };
-    routing: RouteStep[]; // Assuming the need for detailed route information
-    estimate: EstimateResponse;
-}
-
-// Define this interface based on the specific API's response for creating a transaction
-export interface CreateTransactionResponse {
-    // Example fields, adjust according to your API's response
-    transactionId: string;
-    status: string;
-    message?: string;
-}
-
-// Interface for the request body to create a transaction
-// Assuming this structure for Query which matches your previous usage
-export interface Query {
-    params: {
-        tokenIn: string;
-        chainIdIn: number;
-        tokenOut: string;
-        chainIdOut: number;
-        amountIn: string;
-    };
-    slippage: number;
+export interface Logos {
+    [size: string]: string;
 }
