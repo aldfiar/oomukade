@@ -1,27 +1,32 @@
-import {Amounts, Fee, Query, RouteStep} from "../types";
+import {Amounts, Fee, Query, RouteOption, RouteStep} from "../types";
 
-export interface CreateTransactionRequestBody {
+export interface CreateTransactionRequest {
     from: string;
     recipient: string;
-    routing: {
-        query: Query;
-        route: RouteStep[];
-    }
+    routing: RouteOption;
     estimate: EstimateResponse;
 }
 
 export interface CreateTransactionResponse {
     to: string;
     abi: string;
-    args: [
-        string[],
-        string[],
-        {}
-    ]
-    message?: string;
+    args: [string[], string[], Tuple];
+    value: string;
 }
 
-export interface EstimateRequestBody extends Amounts {
+type Tuple = [
+    string[],
+    string[],
+    {
+        executionPrice: string;
+        deadline: string;
+        v: number;
+        r: string;
+        s: string;
+    }
+];
+
+export interface EstimateRequest extends Amounts {
     query: Query;
     route: RouteStep[];
     amountInUsd: number;
@@ -38,3 +43,4 @@ export interface EstimateResponse {
     deadline: string;
     signature: string;
 }
+

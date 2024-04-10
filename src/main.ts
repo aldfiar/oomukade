@@ -1,13 +1,7 @@
-import {
-    CreateTransactionRequestBody,
-    CreateTransactionResponse,
-    EstimateResponse,
-    pusher,
-    Query,
-    RouteOption,
-    RouteStep
-} from "./client";
+import {pusher,} from "./client";
 import {createLogger} from "./logger";
+import {Query, RouteOption} from "./types";
+import {CreateTransactionRequest, CreateTransactionResponse, EstimateResponse} from "./client/types";
 
 const logger = createLogger();
 
@@ -27,20 +21,31 @@ export const estimatePrice = async (query: Query): Promise<EstimateResponse | un
 
 export const estimatePriceForRoute = async (route: RouteOption): Promise<EstimateResponse> => {
     const {priceImpact: _, ...request} = route;
-    const response = await pusher.fetchTransactionEstimate(request)
-    return response
+    return await pusher.fetchTransactionEstimate(request)
 }
 
-export const createTransaction = async (fromUser: string, recipient: string, query: Query, route: RouteStep[], estimate: EstimateResponse): Promise<CreateTransactionResponse> => {
-    const request: CreateTransactionRequestBody = {
+export const createTransactionForRoute = async (fromUser: string, recipient: string, route: RouteOption, estimate: EstimateResponse): Promise<CreateTransactionResponse> => {
+    const {priceImpact: _, ...routing} = route;
+    const request: CreateTransactionRequest = {
         from: fromUser,
         recipient: recipient,
-        routing: {
-            query: query,
-            route: route
-        },
+        routing: routing,
         estimate: estimate
     }
     return await pusher.createTransaction(request)
 }
+
+export const createTransaction = async (fromUser: string, recipient: string, query: Query): Promise<CreateTransactionResponse | undefined> => {
+    const result = await scanRoute(query)
+    const route = result.pop()
+    if (route != undefined) {
+        const estimate = await estimatePriceForRoute(route);
+        return await createTransactionForRoute(fromUser, recipient, route, estimate)
+    }
+    logger.warn(`Can't create transaction for query: ${query}`)
+    return undefined;
+}
+
+
+
 

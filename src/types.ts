@@ -31,7 +31,8 @@ export interface RouteOption extends Amounts {
     route: RouteStep[];
     amountInUsd: number;
     amountOutUsd: number;
-    priceImpact: number;
+    amountOutWithoutSlippageUsd: number;
+    priceImpact?: number;
     totalFee: Fee;
 }
 
