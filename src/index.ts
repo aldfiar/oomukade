@@ -1,9 +1,11 @@
-import {createTransaction, estimatePrice, scanRoute} from "./main";
+import {createTransaction, createTransactionForRoute, estimatePrice, estimatePriceForRoute, scanRoute} from "./main";
 
 const oomukade = {
     scanRoute,
     estimatePrice,
-    createTransaction
+    estimatePriceForRoute,
+    createTransaction,
+    createTransactionForRoute
 }
 
 export default oomukade

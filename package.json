@@ -1,14 +1,17 @@
 {
   "name": "oomukade",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "JavaScript library for crosscurve",
+  "main": "src/index.js",
   "scripts": {
-    "start": "",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json",
+    "test": "ts-node ./test/client.test.ts"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aldfiar/oomukade.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "winston": "^3.12.0"
   },
