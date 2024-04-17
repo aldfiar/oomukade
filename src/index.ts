@@ -8,4 +8,6 @@ const oomukade = {
     createTransactionForRoute
 }
 
+export * from "./types"
+
 export default oomukade
