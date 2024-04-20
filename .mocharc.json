@@ -1,0 +1,12 @@
+{
+  "extension": [
+    "test.ts"
+  ],
+  "spec": "test/*.test.ts",
+  "require": "ts-node/register",
+  "recursive": true,
+  "node-option": [
+    "experimental-specifier-resolution=node",
+    "loader=ts-node/esm"
+  ]
+}
