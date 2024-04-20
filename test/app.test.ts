@@ -1,7 +1,6 @@
 import {describe, it} from "node:test";
 import {expect} from "chai";
-import {Query} from "../src/types";
-import oomukade from "../src";
+import oomukade, {Query} from "../src";
 
 describe("App test", () => {
         const amountIn = "50000000"

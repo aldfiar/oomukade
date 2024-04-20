@@ -1,8 +1,8 @@
 import {describe, it} from "node:test";
 import {expect} from "chai";
-import {pusher} from "../src/client";
-import {Query} from "../src/types";
 import {CreateTransactionRequest} from "../src/client/types";
+import {pusher} from "../src/client";
+import {Query} from "../src";
 
 describe("Client test", () => {
         const amountIn = "50000000"
@@ -25,7 +25,9 @@ describe("Client test", () => {
             const firstRoute = result.pop()
             expect(firstRoute).to.not.be.undefined;
             expect(firstRoute).to.have.property('amountIn').equals(amountIn);
-            expect(firstRoute).to.have.property('amountOutUsd').gt(0);
+            expect(firstRoute).to.have.property('amountOut');
+            expect(firstRoute).to.have.property('tokenInPrice').gt(0);
+            expect(firstRoute).to.have.property('tokenOutPrice').gt(0);
         });
 
         it("Should receive data from estimate request for pair", async () => {
