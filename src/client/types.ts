@@ -1,4 +1,4 @@
-import {Amounts, Fee, Query, RouteOption, RouteStep} from "../types";
+import {Amounts, Estimate, Fee, Query, RouteOption, RouteStep} from "../types";
 
 export interface CreateTransactionRequest {
     from: string;
@@ -35,12 +35,8 @@ export interface EstimateRequest extends Amounts {
     totalFee: Fee;
 }
 
-export interface EstimateResponse {
+export interface EstimateResponse extends Estimate {
     priceInDollars: string;
-    executionPrice: string;
     stablePrice: string;
-    workerFee: string;
-    deadline: string;
-    signature: string;
 }
 

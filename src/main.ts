@@ -1,6 +1,6 @@
 import {pusher,} from "./client";
 import {createLogger} from "./logger";
-import {Query, RouteOption} from "./types";
+import {Estimate, Query, RouteOption} from "./types";
 import {CreateTransactionRequest, CreateTransactionResponse, EstimateResponse} from "./client/types";
 
 const logger = createLogger();
@@ -9,7 +9,7 @@ export const scanRoute = async (query: Query): Promise<RouteOption[]> => {
     return await pusher.scanForRoutes(query)
 }
 
-export const estimatePrice = async (query: Query): Promise<EstimateResponse | undefined> => {
+export const estimatePrice = async (query: Query): Promise<Estimate | undefined> => {
     const result = await scanRoute(query)
     const route = result.pop()
     if (route != undefined) {
@@ -19,18 +19,18 @@ export const estimatePrice = async (query: Query): Promise<EstimateResponse | un
     return undefined;
 }
 
-export const estimatePriceForRoute = async (route: RouteOption): Promise<EstimateResponse> => {
+export const estimatePriceForRoute = async (route: RouteOption): Promise<Estimate> => {
     const {priceImpact: _, ...request} = route;
     return await pusher.fetchTransactionEstimate(request)
 }
 
-export const createTransactionForRoute = async (fromUser: string, recipient: string, route: RouteOption, estimate: EstimateResponse): Promise<CreateTransactionResponse> => {
+export const createTransactionForRoute = async (fromUser: string, recipient: string, route: RouteOption, estimate: Estimate): Promise<CreateTransactionResponse> => {
     const {priceImpact: _, ...routing} = route;
     const request: CreateTransactionRequest = {
         from: fromUser,
         recipient: recipient,
         routing: routing,
-        estimate: estimate
+        estimate: <EstimateResponse>estimate
     }
     return await pusher.createTransaction(request)
 }
