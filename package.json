@@ -2,16 +2,21 @@
   "name": "oomukade",
   "version": "1.0.0",
   "description": "JavaScript library for crosscurve",
-  "main": "dist/index",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist//module/index.js",
   "scripts": {
-    "build": "rm -rf dist && tsc --build tsconfig.json",
+    "clean": "rm -rf build",
+    "build": "tsc -p tsconfig.json",
     "test": "mocha"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/aldfiar/oomukade.git"
   },
-  "type": "module",
   "license": "MIT",
   "dependencies": {
     "winston": "^3.12.0"
@@ -32,5 +37,8 @@
     "prettier": "3.2.5",
     "ts-node": "^10.4.0",
     "typescript": "^5.4.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

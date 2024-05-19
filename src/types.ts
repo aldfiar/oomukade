@@ -19,6 +19,13 @@ export interface Amounts {
     slippage: number;
 }
 
+export interface Estimate {
+    executionPrice: string;
+    workerFee: string;
+    deadline: string;
+    signature: string;
+}
+
 export interface RouteParams extends Amounts {
     tokenIn: Token;
     chainIdIn: number;
