@@ -9,5 +9,6 @@ const oomukade = {
 }
 
 export * from "./types"
+export * from "./client/types"
 
 export default oomukade

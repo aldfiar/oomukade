@@ -1,20 +1,68 @@
-import {Amounts, Estimate, Fee, Query, RouteOption, RouteStep} from "../types";
+import {Fee, Query, Route} from "../types"
 
-export interface CreateTransactionRequest {
+export interface ScanRequest extends Query {
+
+}
+
+export interface ScanResponse {
+    query: Query;
+    route: Route[];
+    amountIn: string;
+    amountOut: string;
+    amountOutWithoutSlippage: string;
+    tokenInPrice: number;
+    tokenOutPrice: number;
+    priceImpact: number;
+    totalFee: Fee;
+}
+
+export interface EstimateRequest {
+    query: Query;
+    route: Route[];
+    amountIn: string;
+    amountOut: string;
+    amountOutWithoutSlippage: string;
+    tokenInPrice: number;
+    tokenOutPrice: number;
+}
+
+export interface EstimateResponse {
+    priceInDollars: string;
+    executionPrice: string;
+    stablePrice: string;
+    workerFee: string;
+    deadline: string;
+    signature: string;
+}
+
+interface RoutesForQuery {
+    query: Query;
+    route: Route[];
+}
+
+interface TransactionDetails {
     from: string;
     recipient: string;
-    routing: RouteOption;
-    estimate: EstimateResponse;
+    routing: RoutesForQuery;
+    amountIn: string;
+    amountOut: string;
+    amountOutWithoutSlippage: string;
+    tokenInPrice: number;
+    tokenOutPrice: number;
 }
 
-export interface CreateTransactionResponse {
-    to: string;
-    abi: string;
-    args: [string[], string[], Tuple];
-    value: string;
+interface EstimateDetails extends EstimateResponse {
+
 }
 
-type Tuple = [
+export interface CreateTransactionRequest {
+    from: string,
+    recipient: string,
+    estimate: EstimateDetails;
+    route: Route[];
+}
+
+type FunctionParameters = [
     string[],
     string[],
     {
@@ -26,17 +74,10 @@ type Tuple = [
     }
 ];
 
-export interface EstimateRequest extends Amounts {
-    query: Query;
-    route: RouteStep[];
-    amountInUsd: number;
-    amountOutUsd: number;
-    amountOutWithoutSlippageUsd: number;
-    totalFee: Fee;
-}
-
-export interface EstimateResponse extends Estimate {
-    priceInDollars: string;
-    stablePrice: string;
+export interface CreateTransactionResponse {
+    to: string;
+    abi: string;
+    args: [string[], string[], FunctionParameters];
+    value: string;
 }
 
