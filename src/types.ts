@@ -6,6 +6,7 @@ export interface Params {
     amountIn: string;
 }
 
+`1`
 export interface Query {
     params: Params;
     slippage: number;
@@ -26,16 +27,9 @@ export interface Estimate {
     signature: string;
 }
 
-export interface RouteParams extends Amounts {
-    tokenIn: Token;
-    chainIdIn: number;
-    tokenOut: Token;
-    chainIdOut: number;
-}
-
 export interface RouteOption extends Amounts {
     query: Query;
-    route: RouteStep[];
+    route: Route[];
     amountInUsd: number;
     amountOutUsd: number;
     amountOutWithoutSlippageUsd: number;
@@ -43,7 +37,19 @@ export interface RouteOption extends Amounts {
     totalFee: Fee;
 }
 
-export interface RouteStep {
+export interface RouteParams {
+    tokenIn: Token;
+    chainIdIn: number;
+    tokenOut: Token;
+    chainIdOut: number;
+    amountIn: string;
+    amountInWithoutSlippage: string;
+    amountOut: string;
+    amountOutWithoutSlippage: string;
+    slippage: number;
+}
+
+export interface Route {
     type: string;
     chainId: number;
     params: RouteParams;
@@ -51,8 +57,11 @@ export interface RouteStep {
     fees: Fee[];
 }
 
+export interface TokenLogo {
+    [size: string]: string;
+}
+
 export interface Token {
-    logos?: Logos;
     chainId: number;
     address: string;
     name: string;
@@ -63,24 +72,23 @@ export interface Token {
     permit: boolean;
     originalName: string;
     originalSymbol: string;
+    logos?: TokenLogo;
     coins?: string[];
+    real?: Token;
+    realToken?: Token;
+}
+
+export interface Fee {
+    type: string; // 'eywaStableSwapFee' | 'bridgeFee' | 'total' etc.
+    token?: Token;
+    percent: string;
+    amount: string;
 }
 
 export interface Pool {
     address: string;
     coins: string[];
     decimals: number[];
-    logos: Logos;
-    lp: Token;
-}
-
-export interface Fee {
-    type: string;
-    token?: Token;
-    percent: string;
-    amount: string;
-}
-
-export interface Logos {
-    [size: string]: string;
+    logos: TokenLogo;
+    lp: Token; // Assuming lp is a type of token with additional properties
 }

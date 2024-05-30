@@ -22,7 +22,7 @@ describe("Client test", () => {
         it("Should receive data from scan request for pair", async () => {
             const result = await pusher.scanForRoutes(query)
             expect(result).to.be.an("array").that.length.gte(1)
-            const firstRoute = result.pop()
+            const firstRoute = result.route.pop()
             expect(firstRoute).to.not.be.undefined;
             expect(firstRoute).to.have.property('amountIn').equals(amountIn);
             expect(firstRoute).to.have.property('amountOut');
@@ -33,10 +33,10 @@ describe("Client test", () => {
         it("Should receive data from estimate request for pair", async () => {
             const result = await pusher.scanForRoutes(query)
             expect(result).to.be.an("array").that.length.gte(1)
-            const firstRoute = result.pop()
+            const firstRoute = result.route.pop()
             expect(firstRoute).to.not.be.undefined;
             if (firstRoute != undefined) {
-                const estimate = await pusher.fetchTransactionEstimate(firstRoute)
+                const estimate = await pusher.fetchTransactionEstimate(result)
                 expect(estimate).to.not.be.undefined;
                 expect(estimate).to.have.property('priceInDollars')
                 expect(estimate).to.have.property('executionPrice')
@@ -49,15 +49,15 @@ describe("Client test", () => {
         it("Should receive data from create transaction request for pair", async () => {
             const result = await pusher.scanForRoutes(query)
             expect(result).to.be.an("array").that.length.gte(1)
-            const firstRoute = result.pop()
+            const firstRoute = result.route.pop()
             expect(firstRoute).to.not.be.undefined;
             if (firstRoute != undefined) {
-                const estimate = await pusher.fetchTransactionEstimate(firstRoute)
+                const estimate = await pusher.fetchTransactionEstimate(result)
                 expect(estimate).to.not.be.undefined;
                 const request: CreateTransactionRequest = {
                     from: "0x582dECD2485760D0a3Cb65cDc94777d35363Ed5D",
                     recipient: "0x582dECD2485760D0a3Cb65cDc94777d35363Ed5D",
-                    routing: firstRoute,
+                    route: result.route,
                     estimate: estimate
                 }
                 const response = await pusher.createTransaction(request)
