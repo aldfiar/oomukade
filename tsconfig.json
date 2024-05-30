@@ -6,19 +6,19 @@
       "dom",
       "ES2020"
     ],
-    "module": "ESNext",
+    "module": "ES2020",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "importHelpers": true,
-    "outDir": "./dist",
+    "outDir": "./dist/esm",
     "strict": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

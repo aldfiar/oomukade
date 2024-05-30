@@ -2,17 +2,17 @@
   "name": "oomukade",
   "version": "1.0.0",
   "description": "JavaScript library for crosscurve",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "module": "dist/index.js",
-  "type": "module",
+  "main": "dist/cjs/index.js",
+  "typings": "dist/cjs/index.d.ts",
+  "module": "dist/esm/index.js",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "test": "mocha"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "repository": {
     "type": "git",
@@ -20,7 +20,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "winston": "^3.12.0"
+    "winston": "^3.12.0",
+    "ts-node": "^10.4.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
@@ -36,7 +37,6 @@
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-unused-imports": "3.0.0",
     "prettier": "3.2.5",
-    "ts-node": "^10.4.0",
     "typescript": "^5.4.3"
   },
   "engines": {
