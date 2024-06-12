@@ -2,12 +2,12 @@ import config, {ClientConfig} from "./config/clientConfig";
 import {CREATE_TRANSACTION, ESTIMATE, FIND_ROUTE} from "./endpoints";
 import {post} from "./utils/fetch";
 import {
-    CreateTransactionRequest,
     CreateTransactionResponse,
     EstimateRequest,
     EstimateResponse,
     ScanRequest,
-    ScanResponse
+    ScanResponse,
+    TransactionDetails
 } from "./types";
 
 
@@ -18,9 +18,9 @@ export class PusherClient {
         this.config = config
     }
 
-    async scanForRoutes(requestBody: ScanRequest): Promise<ScanResponse> {
+    async scanForRoutes(requestBody: ScanRequest): Promise<ScanResponse[]> {
         const result = await post(`${this.config.baseUrl}${FIND_ROUTE}`, requestBody)
-        return result as ScanResponse;
+        return result as ScanResponse[];
     }
 
     async fetchTransactionEstimate(requestBody: EstimateRequest): Promise<EstimateResponse> {
@@ -28,7 +28,7 @@ export class PusherClient {
         return result as EstimateResponse;
     }
 
-    async createTransaction(requestBody: CreateTransactionRequest): Promise<CreateTransactionResponse> {
+    async createTransaction(requestBody: TransactionDetails): Promise<CreateTransactionResponse> {
         const result = await post(`${this.config.baseUrl}${CREATE_TRANSACTION}`, requestBody)
         return result as CreateTransactionResponse;
     }

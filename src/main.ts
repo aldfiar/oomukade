@@ -1,39 +1,51 @@
 import {pusher,} from "./client";
 import {createLogger} from "./logger";
 import {Query} from "./types";
-import {CreateTransactionRequest, CreateTransactionResponse, EstimateResponse, ScanResponse} from "./client/types";
+import {CreateTransactionResponse, EstimateResponse, ScanResponse, TransactionDetails} from "./client/types";
 
 const logger = createLogger();
 
-export const scanRoute = async (query: Query): Promise<ScanResponse> => {
+export const scanRoute = async (query: Query): Promise<ScanResponse[]> => {
     return await pusher.scanForRoutes(query)
 }
 
 export const estimatePrice = async (query: Query): Promise<EstimateResponse | undefined> => {
     const result = await scanRoute(query)
-    return await estimatePriceForRoute(result);
+    const scanResult = result.pop()
+    if (scanResult != undefined) {
+        return await estimatePriceForRoute(scanResult);
+    }
+    return undefined;
 }
 
-export const estimatePriceForRoute = async (scan: ScanResponse): Promise<EstimateResponse> => {
+export const estimatePriceForRoute = async (scan: ScanResponse): Promise<EstimateResponse | undefined> => {
     const {priceImpact: _, ...request} = scan;
     return await pusher.fetchTransactionEstimate(request)
 }
 
-export const createTransactionForRoute = async (fromUser: string, recipient: string, scan: ScanResponse, estimate: EstimateResponse): Promise<CreateTransactionResponse> => {
+export const createTransactionForRoute = async (fromUser: string, recipient: string, scan: ScanResponse, estimate: EstimateResponse): Promise<CreateTransactionResponse | undefined> => {
     const {priceImpact: _, ...routing} = scan;
-    const request: CreateTransactionRequest = {
+    const request: TransactionDetails = {
         from: fromUser,
         recipient: recipient,
         estimate: estimate,
-        route: scan.route
+        routing: routing
     }
     return await pusher.createTransaction(request)
 }
 
 export const createTransaction = async (fromUser: string, recipient: string, query: Query): Promise<CreateTransactionResponse | undefined> => {
     const result = await scanRoute(query)
-    const estimate = await estimatePriceForRoute(result);
-    return await createTransactionForRoute(fromUser, recipient, result, estimate)
+    const scanResult = result.pop()
+    if (scanResult != undefined) {
+        const estimate = await estimatePriceForRoute(scanResult);
+        if (estimate != undefined) {
+            return await createTransactionForRoute(fromUser, recipient, scanResult, estimate);
+        }
+        return undefined;
+    }
+    return undefined;
+
 }
 
 

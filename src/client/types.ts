@@ -35,44 +35,30 @@ export interface EstimateResponse {
     signature: string;
 }
 
-interface RoutesForQuery {
+export interface RoutesForQuery {
     query: Query;
     route: Route[];
 }
 
-interface TransactionDetails {
+export interface TransactionDetails {
     from: string;
     recipient: string;
     routing: RoutesForQuery;
-    amountIn: string;
-    amountOut: string;
-    amountOutWithoutSlippage: string;
-    tokenInPrice: number;
-    tokenOutPrice: number;
+    estimate: EstimateResponse;
 }
 
 interface EstimateDetails extends EstimateResponse {
 
 }
 
-export interface CreateTransactionRequest {
-    from: string,
-    recipient: string,
-    estimate: EstimateDetails;
-    route: Route[];
-}
 
-type FunctionParameters = [
-    string[],
-    string[],
-    {
-        executionPrice: string;
-        deadline: string;
-        v: number;
-        r: string;
-        s: string;
-    }
-];
+export interface FunctionParameters {
+    executionPrice: string;
+    deadline: string;
+    v: number;
+    r: string;
+    s: string;
+}
 
 export interface CreateTransactionResponse {
     to: string;
